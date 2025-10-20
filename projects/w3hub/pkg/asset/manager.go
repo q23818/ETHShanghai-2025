@@ -3,6 +3,7 @@ package asset
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/q23818/ETHShanghai-2025/projects/w3hub/pkg/blockchain"
@@ -19,13 +20,13 @@ type Asset struct {
 
 type Manager struct {
 	db          *sql.DB
-	chainClient blockchain.Client
+	ChainClient blockchain.Client // 导出ChainClient字段
 }
 
 func NewManager(db *sql.DB, client blockchain.Client) *Manager {
 	return &Manager{
 		db:          db,
-		chainClient: client,
+		ChainClient: client,
 	}
 }
 
@@ -35,7 +36,7 @@ func (m *Manager) TrackAssets(ctx context.Context, chainType string, addresses [
 		return fmt.Errorf("至少需要提供一个地址")
 	}
 
-	client, ok := m.chainClient.GetClient(chainType)
+	client, ok := m.ChainClient.GetClient(chainType)
 	if !ok {
 		return fmt.Errorf("不支持的链类型: %s", chainType)
 	}

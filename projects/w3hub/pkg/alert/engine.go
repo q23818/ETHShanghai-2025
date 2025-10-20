@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/w3hub/core/pkg/blockchain"
+	"github.com/q23818/ETHShanghai-2025/projects/w3hub/pkg/blockchain"
 )
 
 type RuleCondition struct {
@@ -61,10 +61,8 @@ func (e *RuleEngine) checkConditions(rule AlertRule, tx blockchain.Transaction) 
 	for _, cond := range rule.Conditions {
 		switch cond.Field {
 		case "value":
-			value, ok := tx.Value.(float64)
-			if !ok {
-				continue
-			}
+			value := tx.Value // 直接使用float64值
+			
 			threshold, ok := cond.Value.(float64)
 			if !ok {
 				continue

@@ -35,7 +35,19 @@ func (a *API) GetAssets(c *gin.Context) {
 	chain := c.Param("chain")
 	address := c.Param("address")
 
-	assets, err := a.assetManager.GetAssets(c.Request.Context(), chain, address)
+	err := a.assetManager.TrackAssets(c.Request.Context(), chain, []string{address})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	
+	client, ok := a.assetManager.ChainClient.GetClient(chain)
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "不支持的链类型"})
+		return
+	}
+	
+	assets, err := client.GetAssets(c.Request.Context(), address)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

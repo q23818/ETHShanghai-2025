@@ -33,6 +33,9 @@ type Client interface {
 	
 	// 监控地址变动
 	WatchAddress(ctx context.Context, address string) (<-chan Transaction, error)
+
+	// 获取特定链的客户端
+	GetClient(chainType string) (Client, bool)
 }
 
 // 多链客户端管理器

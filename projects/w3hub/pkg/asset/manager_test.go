@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/w3hub/core/pkg/blockchain"
+	"github.com/q23818/ETHShanghai-2025/projects/w3hub/pkg/blockchain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

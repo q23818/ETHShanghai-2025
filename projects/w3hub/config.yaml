@@ -1,0 +1,14 @@
+# 数据库配置
+database:
+  path: "./w3hub.db"
+
+# 以太坊节点配置
+ethereum:
+  rpc_url: "https://mainnet.infura.io/v3/9f256554b65541fd8030d03baa3b934d"  # 替换为您的实际Infura API Key
+
+# 监控配置
+monitor:
+  interval: "5m"
+  addresses:
+    - "0xdadB0d80178819F2319190D340ce9A924f783711"  # 替换为实际监控地址
+    - "0x2408fAeC6723835fB38e9F4D59CeAEa9057D1977"

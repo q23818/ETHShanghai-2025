@@ -2,11 +2,13 @@ package ethereum
 
 import (
 	"context"
+	"fmt"
+	"log"
 	"math/big"
 	"time"
 
-	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/q23818/ETHShanghai-2025/projects/w3hub/pkg/blockchain"
 )
@@ -106,12 +108,16 @@ func (e *EthereumClient) WatchAddress(ctx context.Context, address string) (<-ch
 
 				for _, tx := range block.Transactions() {
 					// 只监控与目标地址相关的交易
-					if tx.To() != nil && *tx.To() == account || tx.From() == account {
+					sender, _ := types.Sender(types.NewEIP155Signer(tx.ChainId()), tx)
+					if tx.To() != nil && *tx.To() == account || sender == account {
 						txChan <- blockchain.Transaction{
 							Hash:        tx.Hash().Hex(),
-							From:        tx.From().Hex(),
+							From:        sender.Hex(),
 							To:          tx.To().Hex(),
-							Value:       new(big.Float).Quo(new(big.Float).SetInt(tx.Value()), big.NewFloat(1e18)).String(),
+							Value:       func() float64 {
+								val, _ := new(big.Float).Quo(new(big.Float).SetInt(tx.Value()), big.NewFloat(1e18)).Float64()
+								return val
+							}(), // 忽略精度信息
 							Timestamp:   time.Unix(int64(block.Time()), 0),
 							BlockNumber: block.NumberU64(),
 						}
